@@ -82,7 +82,7 @@ public class LoginActivity extends AppCompatActivity {
                             } catch (FirebaseAuthInvalidUserException e) {
                                 Log.d( "login test", "onComplete: invalid email" );
                                 showToast( "Account not registered yet!" );
-                                editName.setVisibility( View.VISIBLE );
+                                idNameTIP.setVisibility( View.VISIBLE );
                                 btnLogin.setText( getResources().getString( R.string.register ) );
                                 register( Email, Pass );
                             } catch (FirebaseAuthInvalidCredentialsException wrongPassword) {
