@@ -9,8 +9,12 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 public class SplashActivity extends AppCompatActivity {
 
+
+    FirebaseAuth fAuth;
     Handler handler = new Handler();
     Runnable login = new Runnable() {
         @Override
@@ -47,9 +51,9 @@ public class SplashActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                     finally{
-                        SharedPreferences sp = getSharedPreferences( "local_data",0 );
-                        int key=sp.getInt( "key",0);
-                        if(key==1)
+
+                        fAuth=FirebaseAuth.getInstance();
+                        if(fAuth.getCurrentUser()!=null)
                             handler.postDelayed(cont, 500);
                         else{
                             handler.postDelayed(login, 500);

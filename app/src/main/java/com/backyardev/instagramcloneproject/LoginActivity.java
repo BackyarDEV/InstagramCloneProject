@@ -95,11 +95,6 @@ public class LoginActivity extends AppCompatActivity {
                         }
                             else
                             {
-                                SharedPreferences sp = getSharedPreferences( "local_data",0 );
-                                sp=getSharedPreferences( "local_data",MODE_PRIVATE );
-                                SharedPreferences.Editor editor = sp.edit();
-                                editor.putInt("key",1);
-                                editor.apply();
                                 Log.d("loginTest", "signInWithEmail:success");
                                 Intent i = new Intent( LoginActivity.this,HomeActivity.class );
                                 startActivity( i );

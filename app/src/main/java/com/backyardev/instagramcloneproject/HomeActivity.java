@@ -35,10 +35,6 @@ public class HomeActivity extends AppCompatActivity {
         idLogoutFab.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SharedPreferences sp = getSharedPreferences( "local_data",0 );
-                sp=getSharedPreferences( "local_data",MODE_PRIVATE );
-                SharedPreferences.Editor editor = sp.edit().remove( "key" );
-                editor.apply();
                 FirebaseAuth.getInstance().signOut();
                 Intent i = new Intent( HomeActivity.this,LoginActivity.class );
                 startActivity( i );
