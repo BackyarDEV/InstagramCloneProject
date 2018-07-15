@@ -1,9 +1,11 @@
 <resources>
     <string name="app_name">Instagram Clone Project</string>
-    <string name="login">Login/Register</string>
+    <string name="login">Login</string>
+    <string name="register">Register</string>
     <string name="password">Password</string>
     <string name="username">Username</string>
     <string name="logo_img">logo_img</string>
     <string name="signup_label">Create an account instead</string>
     <string name="all_users">All Users</string>
+    <string name="email">Email</string>
 </resources>

@@ -1,19 +1,28 @@
 package com.backyardev.instagramcloneproject;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 public class SplashActivity extends AppCompatActivity {
 
     Handler handler = new Handler();
-    Runnable runnable = new Runnable() {
+    Runnable login = new Runnable() {
         @Override
         public void run() {
             Intent i = new Intent(SplashActivity.this,LoginActivity.class );
+            startActivity( i );
+            finish();
+        }
+    };    Runnable cont = new Runnable() {
+        @Override
+        public void run() {
+            Intent i = new Intent(SplashActivity.this,HomeActivity.class );
             startActivity( i );
             finish();
         }
@@ -31,16 +40,20 @@ public class SplashActivity extends AppCompatActivity {
                     try{
                         for(int i=0;i<100;i++){
                             splashProgress.setProgress( i );
-                            sleep( 20 );
+                            sleep( 10 );
                         }
                     }
                     catch ( Exception e){
                         e.printStackTrace();
                     }
                     finally{
-
-                        handler.postDelayed(runnable, 500);
-
+                        SharedPreferences sp = getSharedPreferences( "local_data",0 );
+                        int key=sp.getInt( "key",0);
+                        if(key==1)
+                            handler.postDelayed(cont, 500);
+                        else{
+                            handler.postDelayed(login, 500);
+                        }
                     }
                 }
             };
