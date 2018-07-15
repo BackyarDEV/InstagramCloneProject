@@ -17,6 +17,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthEmailException;
+import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
@@ -71,29 +73,27 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         progressBar.setVisibility( View.INVISIBLE );
-                        if (task.isSuccessful()) {
-                            try
-                            {
+                        if (!task.isSuccessful()) {
+                            try {
+
+                                Log.d( "loginTest", String.valueOf( task.getException() ) );
                                 throw task.getException();
-                            }
-                            catch (FirebaseAuthInvalidUserException invalidEmail)
-                            {
+
+                            } catch (FirebaseAuthInvalidUserException e) {
+                                Log.d( "login test", "onComplete: invalid email" );
                                 showToast( "Account not registered yet!" );
                                 editName.setVisibility( View.VISIBLE );
-                                btnLogin.setText( getResources().getString(R.string.register) );
-                                register( Email,Pass);
-                            }
-                            catch (FirebaseAuthInvalidCredentialsException wrongPassword)
-                            {
-                                Log.d("loginTest", "onComplete: wrong_password");
+                                btnLogin.setText( getResources().getString( R.string.register ) );
+                                register( Email, Pass );
+                            } catch (FirebaseAuthInvalidCredentialsException wrongPassword) {
+                                Log.d( "loginTest", "onComplete: wrong_password" );
                                 editPass.setError( "Invalid password" );
                                 editPass.requestFocus();
+                            } catch (Exception e) {
+                                Log.d( "loginTest extra", e.getMessage() );
                             }
-                            catch (Exception e)
-                            {
-                                e.printStackTrace();
-                            }
-                            finally
+                        }
+                            else
                             {
                                 SharedPreferences sp = getSharedPreferences( "local_data",0 );
                                 sp=getSharedPreferences( "local_data",MODE_PRIVATE );
@@ -105,7 +105,8 @@ public class LoginActivity extends AppCompatActivity {
                                 startActivity( i );
                                 finish();
                             }
-                        }
+
+
                     }
                 });
     }
