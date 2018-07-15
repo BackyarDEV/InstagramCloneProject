@@ -1,16 +1,15 @@
 package com.backyardev.instagramcloneproject;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
-
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -23,6 +22,9 @@ public class HomeActivity extends AppCompatActivity {
         setContentView( R.layout.activity_home );
 
         listAllUsers=findViewById( R.id.listAllUsers );
+        String user=FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+        Toast.makeText( this,"Welcome "+user,Toast.LENGTH_SHORT ).show();
+
 
         FloatingActionButton idLogoutFab = findViewById( R.id.idLogoutFab );
         FloatingActionButton idCameraFab = findViewById( R.id.idCameraFab );
