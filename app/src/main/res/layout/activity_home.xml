@@ -81,4 +81,46 @@
 
     </RelativeLayout>
 
+    <RelativeLayout
+        android:id="@+id/imageRel"
+        android:layout_margin="20dp"
+        android:padding="20dp"
+        android:layout_centerInParent="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        android:background="@drawable/rel_layout_bg">
+
+        <ImageView
+            android:id="@+id/uploadImageView"
+            android:layout_width="match_parent"
+            android:layout_height="400dp"
+            android:layout_marginTop="25dp"
+            />
+
+        <Button
+            android:id="@+id/btnUpload"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="UpLoad"
+            android:fontFamily="@font/source_sans_pro"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="15dp"
+            android:layout_below="@id/uploadImageView"
+            android:background="?android:selectableItemBackground"
+            />
+        <Button
+            android:id="@+id/btnCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cancel"
+            android:layout_marginTop="15dp"
+            android:layout_alignParentStart="true"
+            android:layout_below="@id/uploadImageView"
+            android:fontFamily="@font/source_sans_pro"
+            android:background="?android:selectableItemBackground"
+            />
+
+    </RelativeLayout>
+
 </RelativeLayout>
