@@ -188,8 +188,9 @@ public class HomeActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         progressDialog.dismiss();
-                        Log.d( "upload","upload failed!" );
-                        Toast.makeText( HomeActivity.this,"Upload Failed!!",Toast.LENGTH_SHORT ).show();
+                        Log.d( "upload","upload failed!"+ e.getMessage() );
+
+                        Toast.makeText( HomeActivity.this,"Upload Failed!!"+ e.getMessage(),Toast.LENGTH_SHORT ).show();
                     }
                 } ).addOnSuccessListener( new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
