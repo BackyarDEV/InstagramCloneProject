@@ -23,9 +23,9 @@ public class SplashActivity extends AppCompatActivity {
         splashProgress.setVisibility( View.VISIBLE );
         fAuth=FirebaseAuth.getInstance();
         if(fAuth.getCurrentUser()!=null)
-            handler.postDelayed(cont, 500);
+            handler.postDelayed(cont, 2000);
         else{
-            handler.postDelayed(login, 500);
+            handler.postDelayed(login, 2000);
         }
     }
     Runnable login = new Runnable() {
