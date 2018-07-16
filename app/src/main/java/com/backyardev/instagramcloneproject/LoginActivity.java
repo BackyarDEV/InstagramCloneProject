@@ -9,7 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -29,8 +29,7 @@ public class LoginActivity extends AppCompatActivity {
     Button btnLogin;
     TextInputLayout idNameTIP;
     private FirebaseAuth mAuth;
-    private static final String TAG = "LoginActivity";
-    ProgressBar progressBar;
+    RelativeLayout relProgress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +40,7 @@ public class LoginActivity extends AppCompatActivity {
         editName=findViewById( R.id.editName );
         editEmail=findViewById( R.id.editEmail );
         idNameTIP=findViewById( R.id.idNameTIP );
-        progressBar =findViewById( R.id.registerProgress);
+        relProgress =findViewById( R.id.relProgress);
         mAuth = FirebaseAuth.getInstance();
     }
 
@@ -65,12 +64,12 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     void login(final String Email, final String Pass){
-        progressBar.setVisibility( View.VISIBLE );
+        relProgress.setVisibility( View.VISIBLE );
         mAuth.signInWithEmailAndPassword(Email, Pass)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        progressBar.setVisibility( View.INVISIBLE );
+                        relProgress.setVisibility( View.INVISIBLE );
                         if (!task.isSuccessful()) {
                             try {
 
@@ -111,13 +110,13 @@ public class LoginActivity extends AppCompatActivity {
                 final String Name=editName.getText().toString().trim();
                 if(Name.isEmpty()) editName.setError( "Required Field!" );
                 else{
-                progressBar.setVisibility( View.VISIBLE );
+                relProgress.setVisibility( View.VISIBLE );
                 mAuth.createUserWithEmailAndPassword(Email, Pass)
                         .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
 
-                                progressBar.setVisibility( View.INVISIBLE );
+                                relProgress.setVisibility( View.INVISIBLE );
                                 if (!task.isSuccessful()) {
                                     showToast( "Authentication failed." + task.getException() );
                                 } else {

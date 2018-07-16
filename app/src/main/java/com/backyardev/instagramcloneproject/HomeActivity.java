@@ -30,9 +30,6 @@ public class HomeActivity extends AppCompatActivity {
         FloatingActionButton idCameraFab = findViewById( R.id.idCameraFab );
         FloatingActionButton idGalleryFab = findViewById( R.id.idGalleryFab );
 
-        idCameraFab.setBackground( getDrawable( R.drawable.camera ) );
-        idLogoutFab.setBackground( getDrawable( R.drawable.logout ) );
-        idGalleryFab.setBackground( getDrawable( R.drawable.gallery ) );
 
         idLogoutFab.setOnClickListener( new View.OnClickListener() {
             @Override

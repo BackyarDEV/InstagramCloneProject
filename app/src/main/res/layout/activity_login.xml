@@ -3,14 +3,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:theme="@style/FullScreen"
     android:layout_gravity="center"
-    android:background="@drawable/grad_bg"
+    android:background="@color/background"
     tools:context=".LoginActivity">
     <ImageView
         android:id="@+id/idIV"
         android:layout_centerHorizontal="true"
         android:background="@drawable/instagram256"
         android:layout_width="80dp"
+        android:foregroundTint="@color/half_black"
         android:layout_height="80dp"
         android:layout_marginTop="100dp"
         android:layout_marginBottom="80dp"
@@ -81,10 +83,11 @@
         android:paddingEnd="5dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
         android:layout_below="@id/idPassTIP"
-        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
         android:layout_marginTop="20dp"
+        android:backgroundTint="@color/black_semi_transparent"
         android:background="?android:selectableItemBackground"
         android:fontFamily="@font/source_sans_pro"
         android:onClick="btnLoginAction"
@@ -92,16 +95,19 @@
         android:textColor="@color/colorAccent"
         android:textSize="20sp" />
 
-
+<RelativeLayout
+    android:id="@+id/relProgress"
+    android:background="@color/black_semi_transparent"
+    android:visibility="invisible"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
     <ProgressBar
-        android:id="@+id/registerProgress"
         android:backgroundTint="#00000000"
         android:foregroundTint="#fff"
-        android:visibility="invisible"
         android:layout_margin="25dp"
         android:layout_centerInParent="true"
-        android:layout_alignParentBottom="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_width="100dp"
+        android:layout_height="100dp"/>
 
+    </RelativeLayout>
 </RelativeLayout>
