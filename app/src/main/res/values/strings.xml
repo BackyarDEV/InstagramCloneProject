@@ -8,4 +8,5 @@
     <string name="signup_label">Create an account instead</string>
     <string name="all_users">All Users</string>
     <string name="email">Email</string>
+    <string name="home_title">All Users</string>
 </resources>

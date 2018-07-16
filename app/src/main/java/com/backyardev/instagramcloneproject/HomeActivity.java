@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -24,6 +25,8 @@ public class HomeActivity extends AppCompatActivity {
         listAllUsers=findViewById( R.id.listAllUsers );
         String user=FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
         Toast.makeText( this,"Welcome "+user,Toast.LENGTH_SHORT ).show();
+
+        getSupportActionBar().setTitle( Html.fromHtml("<font color=\"black\">" + getString(R.string.home_title) + "</font>"));
 
 
         FloatingActionButton idLogoutFab = findViewById( R.id.idLogoutFab );
