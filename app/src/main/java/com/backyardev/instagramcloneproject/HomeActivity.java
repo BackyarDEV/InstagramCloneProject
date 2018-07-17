@@ -9,11 +9,14 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.icu.text.SimpleDateFormat;
 import android.net.Uri;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Html;
@@ -42,6 +45,8 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
@@ -50,6 +55,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private static final int CAMERA_REQUEST_CODE=1;
     private static final int GALLERY_REQUEST_CODE=2;
+    static final int REQUEST_TAKE_PHOTO = 1;
 
     ListView listAllUsers;
     FloatingActionButton button;
@@ -121,10 +127,8 @@ public class HomeActivity extends AppCompatActivity {
                                 new String[]{Manifest.permission.CAMERA}, CAMERA_REQUEST_CODE );
                     }
                 }
-                Intent intent = new Intent( MediaStore.ACTION_IMAGE_CAPTURE );
-                if (intent.resolveActivity( getPackageManager() ) != null) {
-                    startActivityForResult( intent, CAMERA_REQUEST_CODE );
-                }
+                dispatchTakePictureIntent();
+
             }
         } );
         idGalleryFab.setOnClickListener( new View.OnClickListener() {
@@ -143,11 +147,12 @@ public class HomeActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult( requestCode, resultCode, data );
 
-
         if (requestCode == CAMERA_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             imageRel.setVisibility( View.VISIBLE );
             idOpsFab.setVisibility( View.INVISIBLE );
-            Bitmap photo = (Bitmap) data.getExtras().get( "data" );
+            File imageFile = getImageFile();
+
+            Bitmap photo = BitmapFactory.decodeFile(imageFile.getAbsolutePath());
             uploadImageView.setImageBitmap( photo );
         }else if(requestCode == GALLERY_REQUEST_CODE && resultCode == Activity.RESULT_OK){
             imageRel.setVisibility( View.VISIBLE );
@@ -180,10 +185,10 @@ public class HomeActivity extends AppCompatActivity {
                 uploadImageView.buildDrawingCache();
                 Bitmap bitmap = ((BitmapDrawable) uploadImageView.getDrawable()).getBitmap();
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 75, baos);
                 byte[] data = baos.toByteArray();
                 String timestamp=String.valueOf( new Date().getTime() );
-                StorageReference storRef =storage.child( user+"'s Photos" ).child( "JPEG_"+timestamp+"_" );
+                StorageReference storRef =storage.child( user+"'s Photos" ).child( "JPEG_"+timestamp+".jpg" );
                 UploadTask uploadTask = (UploadTask) storRef.putBytes(data).addOnFailureListener( new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
@@ -205,6 +210,56 @@ public class HomeActivity extends AppCompatActivity {
         } );
 
 
+    }
+    String mCurrentPhotoPath;
+
+    private File createImageFile() throws IOException {
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir( Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        mCurrentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+    private File getImageFile() {
+        File f = getExternalFilesDir( Environment.DIRECTORY_PICTURES);
+        File imageFiles[] = f.listFiles();
+
+        if (imageFiles == null || imageFiles.length == 0) {
+            return null;
+        }
+
+        File lastModifiedFile = imageFiles[0];
+        for (int i = 1; i < imageFiles.length; i++) {
+            if (lastModifiedFile.lastModified() < imageFiles[i].lastModified()) {
+                lastModifiedFile = imageFiles[i];
+            }
+        }
+        return lastModifiedFile;
+    }
+
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                Log.d( "IOlog",ex.getMessage() );
+            }
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(this,
+                        "com.backyardev.instagramcloneproject.fileprovider",
+                        photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+            }
+        }
     }
 
     private void populateList() {
