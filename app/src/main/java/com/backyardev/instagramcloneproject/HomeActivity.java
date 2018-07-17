@@ -17,6 +17,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Html;
@@ -58,14 +59,16 @@ public class HomeActivity extends AppCompatActivity {
     static final int REQUEST_TAKE_PHOTO = 1;
 
     ListView listAllUsers;
+    SwipeRefreshLayout userListRefresh;
     FloatingActionButton button;
-    RelativeLayout relProg,imageRel;
+    RelativeLayout imageRel;
     private ProgressDialog progressDialog;
     private StorageReference storage;
     FloatingActionsMenu idOpsFab;
     Button btnUpload,btnCancel;
     ImageView uploadImageView;
-    String user;
+    String user,uid,timestamp,generatedFilePath,mCurrentPhotoPath;
+    StorageReference storRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,18 +76,26 @@ public class HomeActivity extends AppCompatActivity {
         setContentView( R.layout.activity_home );
 
         progressDialog=new ProgressDialog( this );
-        relProg=findViewById( R.id.relProg );
         imageRel=findViewById( R.id.imageRel );
         idOpsFab=findViewById( R.id.idOpsFab );
         btnCancel=findViewById( R.id.btnCancel );
         btnUpload=findViewById( R.id.btnUpload );
         listAllUsers=findViewById( R.id.listAllUsers );
         uploadImageView=findViewById( R.id.uploadImageView );
+        userListRefresh=findViewById( R.id.userListRefresh );
         user=FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+        uid= FirebaseAuth.getInstance().getCurrentUser().getUid();
         Toast.makeText( this,"Welcome "+user,Toast.LENGTH_SHORT ).show();
-        relProg.setVisibility( View.VISIBLE );
+        userListRefresh.setRefreshing( true );
         getSupportActionBar().setTitle( Html.fromHtml("<font color=\"black\">" + getString(R.string.home_title) + "</font>"));
             populateList();
+
+            userListRefresh.setOnRefreshListener( new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                populateList();
+                }
+            } );
 
 
             storage=FirebaseStorage.getInstance().getReference();
@@ -185,22 +196,30 @@ public class HomeActivity extends AppCompatActivity {
                 uploadImageView.buildDrawingCache();
                 Bitmap bitmap = ((BitmapDrawable) uploadImageView.getDrawable()).getBitmap();
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 75, baos);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 80, baos);
                 byte[] data = baos.toByteArray();
-                String timestamp=String.valueOf( new Date().getTime() );
-                StorageReference storRef =storage.child( user+"'s Photos" ).child( "JPEG_"+timestamp+".jpg" );
+                timestamp=String.valueOf( new Date().getTime() );
+                 storRef=storage.child( user+"'s Photos" ).child( "JPEG_"+timestamp+".jpg" );
                 UploadTask uploadTask = (UploadTask) storRef.putBytes(data).addOnFailureListener( new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         progressDialog.dismiss();
                         Log.d( "upload","upload failed!"+ e.getMessage() );
-
                         Toast.makeText( HomeActivity.this,"Upload Failed!!"+ e.getMessage(),Toast.LENGTH_SHORT ).show();
                     }
                 } ).addOnSuccessListener( new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    public void onSuccess(final UploadTask.TaskSnapshot taskSnapshot) {
+
+
+
                         progressDialog.dismiss();
+
+//                        imageInfo.put( "name",user );
+//                        imageInfo.put( "uid",uid );
+//                        imageInfo.put( "dlLink",generatedFilePath);
+//                        DatabaseReference db = FirebaseDatabase.getInstance().getReference(user+"'s pics");
+//                        db.push().setValue(imageInfo);
                         Toast.makeText( HomeActivity.this,"Upload Successful!!",Toast.LENGTH_SHORT ).show();
                         imageRel.setVisibility( View.INVISIBLE );
                         idOpsFab.setVisibility( View.VISIBLE );
@@ -211,7 +230,7 @@ public class HomeActivity extends AppCompatActivity {
 
 
     }
-    String mCurrentPhotoPath;
+
 
     private File createImageFile() throws IOException {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
@@ -289,7 +308,8 @@ public class HomeActivity extends AppCompatActivity {
                 android.R.layout.simple_list_item_1,
                 userNames );
         listAllUsers.setAdapter(arrayAdapter);
-
-        relProg.setVisibility( View.INVISIBLE );
+        if(userListRefresh.isRefreshing()) {
+            userListRefresh.setRefreshing(false);
+        }
     }
 }

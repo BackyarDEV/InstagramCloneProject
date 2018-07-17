@@ -23,7 +23,7 @@
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-                                                <entry key="scalingPercent" value="97" />
+                                                <entry key="scalingPercent" value="117" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -34,7 +34,7 @@
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-                                                <entry key="scalingPercent" value="97" />
+                                                <entry key="scalingPercent" value="74" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -44,8 +44,7 @@
                                   </option>
                                   <option name="values">
                                     <map>
-                                      <entry key="backgroundAssetType" value="COLOR" />
-                                      <entry key="foregroundImage" value="C:\Users\MayankMS\Downloads\instagram256.png" />
+                                      <entry key="foregroundImage" value="C:\Users\MayankMS\Documents\GitHub\InstagramCloneProject\app\src\main\res\drawable-v24\instagram256.png" />
                                     </map>
                                   </option>
                                 </PersistentState>
