@@ -6,7 +6,7 @@
     android:background="@color/background"
     tools:context=".SplashActivity">
 
-    <ImageButton
+    <ImageView
         android:background="@drawable/instagram256"
         android:tint="#fff"
         android:layout_centerInParent="true"

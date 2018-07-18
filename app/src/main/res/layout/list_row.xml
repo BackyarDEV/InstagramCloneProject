@@ -4,12 +4,13 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/list_row_selector"
-    android:paddingStart="8dp">
+    android:padding="8dp">
 
     <com.android.volley.toolbox.NetworkImageView
         android:id="@+id/listImage"
+        android:contentDescription="Loading..."
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"/>
-
+        android:layout_centerInParent="true"
+        android:padding="8dp"/>
 </RelativeLayout>

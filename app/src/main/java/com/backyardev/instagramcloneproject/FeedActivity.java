@@ -87,7 +87,7 @@ public class FeedActivity extends AppCompatActivity {
             Log.d( "imageName",imageName );
             imageList.add(imageName);
         }
-
+        postsList.clear();
         for(int i=0;i<imageList.size();i++){
             StorageReference storageRef = FirebaseStorage.getInstance().getReference();
             storageRef.child( name+" Photos/"+ imageList.get( i ) ).getDownloadUrl()
@@ -101,7 +101,8 @@ public class FeedActivity extends AppCompatActivity {
                         Log.d( "url",url );
                     if(swipeRefreshLayout.isRefreshing()){
                         swipeRefreshLayout.setRefreshing( false );
-                    }listFeed.setAdapter(adapter);
+                    }
+                    listFeed.setAdapter(adapter);
                 }
             } );
         }
