@@ -1,6 +1,5 @@
 package com.backyardev.instagramcloneproject;
 
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.backyardev.instagramcloneproject.adapter.CustomListAdapter;
 
 import android.net.Uri;
@@ -47,9 +46,7 @@ public class FeedActivity extends AppCompatActivity {
         listFeed = findViewById( R.id.listFeed );
         swipeRefreshLayout.setRefreshing( true );
         feedListFeed();
-
-        adapter = new CustomListAdapter(FeedActivity.this,postsList);
-        listFeed.setAdapter(adapter);
+        adapter = new CustomListAdapter(this,postsList);
 
         swipeRefreshLayout.setOnRefreshListener(
                 new SwipeRefreshLayout.OnRefreshListener() {
@@ -82,7 +79,6 @@ public class FeedActivity extends AppCompatActivity {
           } );
         }
 
-
     private void collectUserImages(Map<String, Object> value) {
         ArrayList<String> imageList = new ArrayList<>(  );
         for (Map.Entry<String, Object> entry : value.entrySet()){
@@ -101,18 +97,15 @@ public class FeedActivity extends AppCompatActivity {
                     String url=String.valueOf( uri );
                     ImagePosts im = new ImagePosts();
                     im.setThumbnailUrl( url );
+                    postsList.add( im );
                         Log.d( "url",url );
+                    if(swipeRefreshLayout.isRefreshing()){
+                        swipeRefreshLayout.setRefreshing( false );
+                    }listFeed.setAdapter(adapter);
                 }
             } );
-
         }
 
 
-
-        adapter.notifyDataSetChanged();
-        listFeed.setAdapter( adapter );
-        if(swipeRefreshLayout.isRefreshing()){
-            swipeRefreshLayout.setRefreshing( false );
-        }
     }
 }
