@@ -32,7 +32,6 @@ public class FeedActivity extends AppCompatActivity {
     SwipeRefreshLayout swipeRefreshLayout;
     String imageName,name,uid;
     DatabaseReference db ,dbIn;
-    ArrayList<String> urlList= new ArrayList <>(  );
     private CustomListAdapter adapter;
     ArrayList <ImagePosts> postsList=new ArrayList <>(  );
 
@@ -49,6 +48,9 @@ public class FeedActivity extends AppCompatActivity {
         swipeRefreshLayout.setRefreshing( true );
         feedListFeed();
 
+        adapter = new CustomListAdapter(FeedActivity.this,postsList);
+        listFeed.setAdapter(adapter);
+
         swipeRefreshLayout.setOnRefreshListener(
                 new SwipeRefreshLayout.OnRefreshListener() {
                     @Override
@@ -62,7 +64,7 @@ public class FeedActivity extends AppCompatActivity {
 
     private void feedListFeed() {
 
-            dbIn = FirebaseDatabase.getInstance().getReference(name+"'s pics");
+            dbIn = FirebaseDatabase.getInstance().getReference(name+" pics");
             dbIn.addListenerForSingleValueEvent( new ValueEventListener() {
               @Override
               public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -92,19 +94,23 @@ public class FeedActivity extends AppCompatActivity {
 
         for(int i=0;i<imageList.size();i++){
             StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-            storageRef.child( name+"'s Photos/"+ imageList.get( i ) ).getDownloadUrl()
+            storageRef.child( name+" Photos/"+ imageList.get( i ) ).getDownloadUrl()
                     .addOnSuccessListener( new OnSuccessListener <Uri>() {
                 @Override
                 public void onSuccess(Uri uri) {
                     String url=String.valueOf( uri );
-                        urlList.add( url );
+                    ImagePosts im = new ImagePosts();
+                    im.setThumbnailUrl( url );
                         Log.d( "url",url );
                 }
             } );
+
         }
 
-        adapter = new CustomListAdapter(FeedActivity.this,postsList);
-        listFeed.setAdapter(adapter);
+
+
+        adapter.notifyDataSetChanged();
+        listFeed.setAdapter( adapter );
         if(swipeRefreshLayout.isRefreshing()){
             swipeRefreshLayout.setRefreshing( false );
         }

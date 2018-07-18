@@ -94,7 +94,7 @@ public class HomeActivity extends AppCompatActivity {
         uid= FirebaseAuth.getInstance().getCurrentUser().getUid();
         Toast.makeText( this,"Welcome "+user,Toast.LENGTH_SHORT ).show();
         userListRefresh.setRefreshing( true );
-        db = FirebaseDatabase.getInstance().getReference(user+"'s pics");
+        db = FirebaseDatabase.getInstance().getReference(user+" pics");
 
         getSupportActionBar().setTitle( Html.fromHtml("<font color=\"black\">" + getString(R.string.home_title) + "</font>"));
 
@@ -205,7 +205,7 @@ public class HomeActivity extends AppCompatActivity {
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 80, baos);
                 byte[] data = baos.toByteArray();
                 timestamp=String.valueOf( new Date().getTime() );
-                 storRef=storage.child( user+"'s Photos" ).child( "JPEG_"+timestamp+".jpg" );
+                 storRef=storage.child( user+" Photos" ).child( "JPEG_"+timestamp+".jpg" );
                 UploadTask uploadTask = (UploadTask) storRef.putBytes(data).addOnFailureListener( new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
