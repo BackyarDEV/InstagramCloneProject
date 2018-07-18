@@ -50,11 +50,13 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 public class HomeActivity extends AppCompatActivity {
 
     private static final int CAMERA_REQUEST_CODE=1;
+    private static final int READ_EXTERNAL_STORAGE=3;
     private static final int GALLERY_REQUEST_CODE=2;
     static final int REQUEST_TAKE_PHOTO = 1;
 
@@ -67,8 +69,11 @@ public class HomeActivity extends AppCompatActivity {
     FloatingActionsMenu idOpsFab;
     Button btnUpload,btnCancel;
     ImageView uploadImageView;
+    DatabaseReference db;
     String user,uid,timestamp,generatedFilePath,mCurrentPhotoPath;
     StorageReference storRef;
+    HashMap<String,String> imageInfo = new HashMap <String, String>(  );
+    FirebaseAuth fAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,17 +88,22 @@ public class HomeActivity extends AppCompatActivity {
         listAllUsers=findViewById( R.id.listAllUsers );
         uploadImageView=findViewById( R.id.uploadImageView );
         userListRefresh=findViewById( R.id.userListRefresh );
+
+
         user=FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
         uid= FirebaseAuth.getInstance().getCurrentUser().getUid();
         Toast.makeText( this,"Welcome "+user,Toast.LENGTH_SHORT ).show();
         userListRefresh.setRefreshing( true );
-        getSupportActionBar().setTitle( Html.fromHtml("<font color=\"black\">" + getString(R.string.home_title) + "</font>"));
-            populateList();
+        db = FirebaseDatabase.getInstance().getReference(user+"'s pics");
 
-            userListRefresh.setOnRefreshListener( new SwipeRefreshLayout.OnRefreshListener() {
-                @Override
+        getSupportActionBar().setTitle( Html.fromHtml("<font color=\"black\">" + getString(R.string.home_title) + "</font>"));
+
+        populateList();
+
+        userListRefresh.setOnRefreshListener( new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
                 public void onRefresh() {
-                populateList();
+                    populateList();
                 }
             } );
 
@@ -128,28 +138,24 @@ public class HomeActivity extends AppCompatActivity {
         idCameraFab.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                if (ContextCompat.checkSelfPermission(HomeActivity.this,
-                        Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                    if (ActivityCompat.shouldShowRequestPermissionRationale( HomeActivity.this,
-                            Manifest.permission.CAMERA )) {
-                    } else {
-                        ActivityCompat.requestPermissions( HomeActivity.this,
-                                new String[]{Manifest.permission.CAMERA}, CAMERA_REQUEST_CODE );
-                    }
-                }
                 dispatchTakePictureIntent();
-
             }
         } );
         idGalleryFab.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(
-                        Intent.ACTION_PICK,
-                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                if (ContextCompat.checkSelfPermission( HomeActivity.this,
+                        Manifest.permission.READ_EXTERNAL_STORAGE ) != PackageManager.PERMISSION_GRANTED){
 
-                startActivityForResult(i, GALLERY_REQUEST_CODE);
+                        ActivityCompat.requestPermissions( HomeActivity.this,
+                                new String[] {Manifest.permission.READ_EXTERNAL_STORAGE},
+                                READ_EXTERNAL_STORAGE );
+
+               }
+               Intent i = new Intent( Intent.ACTION_PICK,
+                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI );
+
+                startActivityForResult( i, GALLERY_REQUEST_CODE );
             }
         } );
     }
@@ -211,15 +217,9 @@ public class HomeActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(final UploadTask.TaskSnapshot taskSnapshot) {
 
-
-
                         progressDialog.dismiss();
-
-//                        imageInfo.put( "name",user );
-//                        imageInfo.put( "uid",uid );
-//                        imageInfo.put( "dlLink",generatedFilePath);
-//                        DatabaseReference db = FirebaseDatabase.getInstance().getReference(user+"'s pics");
-//                        db.push().setValue(imageInfo);
+                        imageInfo.put( "image_name","JPEG_"+timestamp+".jpg" );
+                        db.push().setValue(imageInfo);
                         Toast.makeText( HomeActivity.this,"Upload Successful!!",Toast.LENGTH_SHORT ).show();
                         imageRel.setVisibility( View.INVISIBLE );
                         idOpsFab.setVisibility( View.VISIBLE );
@@ -298,11 +298,11 @@ public class HomeActivity extends AppCompatActivity {
 
     private void collectUserNames(Map<String, Object> name) {
         ArrayList<String> userNames = new ArrayList<>();
-        for (Map.Entry<String, Object> entry : name.entrySet()){
-
+            for (Map.Entry<String, Object> entry : name.entrySet()){
             Map singleUser = (Map) entry.getValue();
-            userNames.add((String) singleUser.get("name"));
-        }
+            Log.d( "name",(String)singleUser.get("name") );
+            userNames.add((String)singleUser.get("name"));
+         }
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
                 this,
                 android.R.layout.simple_list_item_1,

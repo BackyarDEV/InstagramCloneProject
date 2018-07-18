@@ -9,10 +9,13 @@
     android:id="@+id/swipeRefresh"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
-    <android.support.v7.widget.RecyclerView
+    <ListView
         android:id="@+id/listFeed"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:divider="@color/list_divider"
+        android:dividerHeight="1dp"
+        android:listSelector="@drawable/list_row_selector"/>
 </android.support.v4.widget.SwipeRefreshLayout>
 
 </RelativeLayout>

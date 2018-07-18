@@ -20,6 +20,7 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 
@@ -147,7 +148,9 @@ public class LoginActivity extends AppCompatActivity {
         } );
         String uID = mAuth.getCurrentUser().getUid();
 
-        FirebaseDatabase.getInstance().getReference("users").push().setValue( new UserInfo( Name, uID ) );
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference dbRef = database.getReference();
+        dbRef.child( "users" ).push().setValue( new UserInfo( Name, uID ) );
     }
 
     void showToast(String msg){

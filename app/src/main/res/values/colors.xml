@@ -12,4 +12,9 @@
     <color name="blue_semi_transparent_pressed">#80738ffe</color>
     <color name="black_semi_transparent">#B2000000</color>
     <color name="half_black">#808080</color>
+    <color name="list_divider">#d9d9d9</color>
+    <color name="list_row_start_color">#ffffff</color>
+    <color name="list_row_end_color">#ffffff</color>
+    <color name="list_row_hover_start_color">#ebeef0</color>
+    <color name="list_row_hover_end_color">#ebeef0</color>
 </resources>
