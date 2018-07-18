@@ -94,6 +94,19 @@
         android:textColor="@color/colorAccent"
         android:textSize="20sp" />
 
+    <TextView
+        android:id="@+id/forgotPass"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/idPassTIP"
+        android:fontFamily="@font/source_sans_pro"
+        android:text="Reset Password"
+        android:textSize="16sp"
+        android:visibility="invisible"
+        android:layout_marginTop="30dp"
+        android:layout_marginStart="45dp"
+        android:onClick="resetPass"/>
+
 <RelativeLayout
     android:id="@+id/relProgress"
     android:background="@color/black_semi_transparent"

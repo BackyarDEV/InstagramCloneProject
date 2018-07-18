@@ -10,9 +10,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -28,6 +30,7 @@ public class LoginActivity extends AppCompatActivity {
 
     EditText editName,editPass,editEmail;
     Button btnLogin;
+    TextView forgotPass;
     TextInputLayout idNameTIP;
     private FirebaseAuth mAuth;
     RelativeLayout relProgress;
@@ -42,6 +45,7 @@ public class LoginActivity extends AppCompatActivity {
         editEmail=findViewById( R.id.editEmail );
         idNameTIP=findViewById( R.id.idNameTIP );
         relProgress =findViewById( R.id.relProgress);
+        forgotPass=findViewById( R.id.forgotPass );
         mAuth = FirebaseAuth.getInstance();
     }
 
@@ -86,6 +90,7 @@ public class LoginActivity extends AppCompatActivity {
                                 register( Email, Pass );
                             } catch (FirebaseAuthInvalidCredentialsException wrongPassword) {
                                 Log.d( "loginTest", "onComplete: wrong_password" );
+                                forgotPass.setVisibility( View.VISIBLE );
                                 editPass.setError( "Invalid password" );
                                 editPass.requestFocus();
                             } catch (Exception e) {
@@ -155,5 +160,28 @@ public class LoginActivity extends AppCompatActivity {
 
     void showToast(String msg){
         Toast.makeText(LoginActivity.this, msg, Toast.LENGTH_SHORT).show();
+    }
+
+    public void resetPass(View view) {
+        relProgress.setVisibility( View.VISIBLE );
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        String emailAddress = editEmail.getText().toString();
+        Log.d( "mail",emailAddress );
+        auth.sendPasswordResetEmail( emailAddress ).addOnCompleteListener( new OnCompleteListener <Void>() {
+            @Override
+            public void onComplete(@NonNull Task <Void> task) {
+                relProgress.setVisibility( View.INVISIBLE );
+                if (task.isSuccessful()) {
+                    Log.d("reset mail", "Email sent.");
+                    showToast( "A password reset email has been sent! Check your inbox" );
+                }else{
+                    try {
+                        throw task.getException();
+                    } catch (Exception e) {
+                        showToast( e.getMessage() );
+                    }
+                }
+            }
+        } );
     }
 }
