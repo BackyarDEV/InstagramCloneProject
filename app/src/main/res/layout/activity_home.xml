@@ -70,43 +70,64 @@
 
     <RelativeLayout
         android:id="@+id/imageRel"
-        android:layout_margin="20dp"
-        android:padding="10dp"
-        android:layout_centerInParent="true"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="invisible"
-        android:background="@drawable/rel_layout_bg">
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:background="#fff"
+        android:visibility="invisible">
 
-        <ImageView
-            android:id="@+id/uploadImageView"
-            android:layout_width="match_parent"
-            android:layout_height="400dp"
-            android:layout_marginTop="25dp"
-            />
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/source_sans_pro"
+            android:padding="8dp"
+            android:text="Confirm Upload..."
+            android:textSize="24sp" />
 
-        <Button
-            android:id="@+id/btnUpload"
-            android:layout_width="wrap_content"
+
+
+            <ImageView
+                android:id="@+id/uploadImageView"
+                android:layout_below="@id/textView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="5dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginBottom="55dp"/>
+
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="UpLoad"
-            android:fontFamily="@font/source_sans_pro"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="15dp"
-            android:layout_below="@id/uploadImageView"
-            android:background="?android:selectableItemBackground"
-            />
-        <Button
-            android:id="@+id/btnCancel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Cancel"
-            android:layout_marginTop="15dp"
-            android:layout_alignParentStart="true"
-            android:layout_below="@id/uploadImageView"
-            android:fontFamily="@font/source_sans_pro"
-            android:background="?android:selectableItemBackground"
-            />
+            android:layout_alignParentBottom="true"
+            android:background="#fff"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp">
+
+            <Button
+                android:id="@+id/btnUpload"
+                android:layout_margin="4dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:background="@drawable/btn_bg"
+                android:foreground="@drawable/ripple"
+                android:fontFamily="@font/source_sans_pro"
+                android:text="UpLoad" />
+
+            <Button
+                android:id="@+id/btnCancel"
+                android:layout_margin="4dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:background="@drawable/btn_bg"
+                android:foreground="@drawable/ripple"
+                android:fontFamily="@font/source_sans_pro"
+                android:text="Cancel" />
+        </RelativeLayout>
 
     </RelativeLayout>
 
