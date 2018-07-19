@@ -3,6 +3,7 @@ package com.backyardev.instagramcloneproject;
 import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -10,6 +11,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.icu.text.SimpleDateFormat;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -198,37 +200,43 @@ public class HomeActivity extends AppCompatActivity {
             public void onClick(View v) {
                 progressDialog.setMessage( "Uploading..." );
                 progressDialog.show();
+                listAllUsers.setVisibility( View.INVISIBLE);
                 uploadImageView.setDrawingCacheEnabled(true);
                 uploadImageView.buildDrawingCache();
+
                 Bitmap bitmap = ((BitmapDrawable) uploadImageView.getDrawable()).getBitmap();
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 80, baos);
                 byte[] data = baos.toByteArray();
                 timestamp=String.valueOf( new Date().getTime() );
                  storRef=storage.child( user+" Photos" ).child( "JPEG_"+timestamp+".jpg" );
-                UploadTask uploadTask = (UploadTask) storRef.putBytes(data).addOnFailureListener( new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        progressDialog.dismiss();
-                        Log.d( "upload","upload failed!"+ e.getMessage() );
-                        Toast.makeText( HomeActivity.this,"Upload Failed!!"+ e.getMessage(),Toast.LENGTH_SHORT ).show();
-                    }
-                } ).addOnSuccessListener( new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(final UploadTask.TaskSnapshot taskSnapshot) {
+                 if(((ConnectivityManager)getSystemService( Context.CONNECTIVITY_SERVICE )).getActiveNetwork()==null) {
+                     Toast.makeText( HomeActivity.this, "Internet Unavailable!", Toast.LENGTH_SHORT ).show();
+                     progressDialog.dismiss();
+                 }else{
+                     UploadTask uploadTask = (UploadTask) storRef.putBytes( data ).addOnFailureListener( new OnFailureListener() {
+                         @Override
+                         public void onFailure(@NonNull Exception e) {
+                             progressDialog.dismiss();
+                             Log.d( "upload", "upload failed!" + e.getMessage() );
+                             Toast.makeText( HomeActivity.this, "Upload Failed!!" + e.getMessage(), Toast.LENGTH_SHORT ).show();
+                         }
+                     } ).addOnSuccessListener( new OnSuccessListener <UploadTask.TaskSnapshot>() {
+                         @Override
+                         public void onSuccess(final UploadTask.TaskSnapshot taskSnapshot) {
 
-                        progressDialog.dismiss();
-                        imageInfo.put( "image_name","JPEG_"+timestamp+".jpg" );
-                        db.push().setValue(imageInfo);
-                        Toast.makeText( HomeActivity.this,"Upload Successful!!",Toast.LENGTH_SHORT ).show();
-                        imageRel.setVisibility( View.INVISIBLE );
-                        idOpsFab.setVisibility( View.VISIBLE );
-                    }
-                } );
+                             progressDialog.dismiss();
+                             imageInfo.put( "image_name", "JPEG_" + timestamp + ".jpg" );
+                             db.push().setValue( imageInfo );
+                             Toast.makeText( HomeActivity.this, "Upload Successful!!", Toast.LENGTH_SHORT ).show();
+                             imageRel.setVisibility( View.INVISIBLE );
+                             idOpsFab.setVisibility( View.VISIBLE );
+                             listAllUsers.setVisibility( View.VISIBLE );
+                         }
+                     } );
+                 }
             }
         } );
-
-
     }
 
 
