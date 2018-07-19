@@ -6,6 +6,7 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -60,6 +61,9 @@ public class LoginActivity extends AppCompatActivity {
         }
         if (Pass.isEmpty()){
             editPass.setError( "Required Field!" );
+            login=false;
+        }if( !Patterns.EMAIL_ADDRESS.matcher( Email ).matches()){
+            editEmail.setError( "Invalid Email ID" );
             login=false;
         }
         if(login){
